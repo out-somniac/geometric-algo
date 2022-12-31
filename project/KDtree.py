@@ -83,6 +83,13 @@ class KDtree:
         scenes = []
         def _build_tree_vis(x_sorted, y_sorted, depth, bounds):
             if len(x_sorted) == 0:
+                scenes.append(
+                Scene(points = \
+                                [PointsCollection(P)],
+                        lines = \
+                            [LinesCollection([l for l in bounds_lines])],
+                        rects = [Rect(bounds[0], bounds[2])])
+            )
                 return None
             if len(x_sorted) == 1:
                 return self.Node(x_sorted[0])
@@ -119,12 +126,14 @@ class KDtree:
             new_node.lower_left = self._find_region_lower_left(P, x_sorted)
             new_node.upper_right = self._find_region_upper_right(P, x_sorted)
 
+            #print(bounds[0], bounds[2])
             scenes.append(
                 Scene(points = \
                                 [PointsCollection(P)] + \
                                 [PointsCollection([P[mid_idx]], color = 'red')],
                         lines = \
-                            [LinesCollection([l for l in bounds_lines])])
+                            [LinesCollection([l for l in bounds_lines])],
+                        rects = [Rect(bounds[0], bounds[2])])
             )
 
             new_node.left = _build_tree_vis(x1_sorted, y1_sorted, depth + 1, bounds_a)

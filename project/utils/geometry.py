@@ -11,7 +11,7 @@ class Point():
         self.y = y
 
     def __eq__(self, other) -> bool:
-        return (self.x == other.x and self.y == other.y)
+        return (self.x - EPS <= other.x <= self.x + EPS and self.y - EPS <= other.y <= self.y + EPS)
 
     def __str__(self) -> str:
         return "{}, {}".format(self.x, self.y)
@@ -20,10 +20,10 @@ class Point():
         return self.__str__()
 
     def follows(self, other: 'Point') -> bool:
-        return self.x > other.x and self.y > other.y
+        return self.x > other.x - EPS and self.y > other.y - EPS
 
     def precedes(self, other: 'Point') -> bool:
-        return self.x < other.x and self.y < other.y
+        return self.x < other.x + EPS and self.y < other.y + EPS
 
     def __iter__(self):
         yield self.x
@@ -42,7 +42,7 @@ class Rect():
         self.upper_right = Point(*upper_right)
 
         if not self.lower_left.precedes(self.upper_right):
-            raise ValueError('Lower-left point must precede the upper-right')
+           raise ValueError('Lower-left point must precede the upper-right')
 
     def __eq__(self, other: 'Rect') -> bool:
         return self.lower_left == other.lower_left and self.upper_right == other.upper_right

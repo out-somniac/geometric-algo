@@ -20,10 +20,11 @@ def main():
     #save_points_to_file(points, "test.json")
     #p = get_saved_points("test.json")
 
-    #points = gen.generate_grid(Rect((0.0, 0.0), (1.0, 1.0)), 100)
+    points = gen.generate_grid(Rect((0.0, 0.0), (1.0, 1.0)), 100)
     #points = gen.generate_cross(Rect((0.0, 0.0), (1.0, 1.0)), 100)
     #points = gen.generate_circle(Point(0.0, 0.0), 100, 100)
-    #Visualizer.visualize_points(points)
+    tree = KDtree(points)
+    Visualizer.visualize_build(points, tree)
 
 if __name__ == "__main__":
     main()
