@@ -2,6 +2,7 @@ from utils.geometry import EPS as eps
 from utils.drawing import PointsCollection
 from utils.drawing import LinesCollection
 from utils.drawing import Scene
+from utils.geometry import Rect
 
 class KDtree:
     class Region:
@@ -150,25 +151,32 @@ class KDtree:
             return True
         return False
 
-    def get_points_inside(self, x1, x2, y1, y2):
+    def get_points_inside(self, rect: Rect):
+        x1 = rect.lower_left.x
+        x2 = rect.upper_right.x
+        y1 = rect.lower_left.y
+        y2 = rect.upper_right.y
+
         def _query(r, head):
             if head.left == None and head.right == None:
                 return []
             
             res = []
-            if self._contains(r, head.left.region):
-                res += head.left.subtree_nodes
-            elif self._intersect(r, head.left.region):
-                res += _query(r, head.left)
-
-            if self._contains(r, head.right.region):
-                res += head.right.subtree_nodes
-            elif self._intersect(r, head.right.region):
-                res += _query(r, head.right)
+            if head.left != None:
+                if self._contains(r, head.left.region):
+                    res += head.left.subtree_nodes
+                elif self._intersect(r, head.left.region):
+                    res += _query(r, head.left)
+            if head.right != None:
+                if self._contains(r, head.right.region):
+                    res += head.right.subtree_nodes
+                elif self._intersect(r, head.right.region):
+                    res += _query(r, head.right)
             return res
 
         r_lower_left = (min(x1, x2), min(y1, y2))
         r_upper_right = (max(x1, x2), max(y1, y2))
         r = self.Region(r_lower_left, r_upper_right)
         res = _query(r, self.head)
-        return res
+
+        return [self.P[idx] for idx in res]
