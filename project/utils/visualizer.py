@@ -4,12 +4,13 @@ from utils.drawing import LinesCollection, Plot, PointsCollection, Scene
 from utils.geometry import Point, Rect
 
 
-class visualizer():
+class Visualizer():
     @staticmethod
     def visualize_points(points: List[Point]):
         plot = Plot(scenes=[
             Scene(points=[PointsCollection(points=[tuple(p) for p in points])])
         ])
+        plot.draw()
 
     @staticmethod
     def visualize_build(points: List[Point], tree):
