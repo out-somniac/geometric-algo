@@ -5,13 +5,13 @@ from matplotlib.patches import Rectangle
 
 from quad_tree import QuadTree
 from utils.geometry import Point, Rect
-from utils.visualiser import Visualiser
+from utils.visualizer import visualizer
 
 
 def main():
     points = [Point(random.uniform(0, 1), random.uniform(0, 1))
               for _ in range(100)]
-    Visualiser.visualise_result(points, Rect(
+    visualizer.visualize_result(points, Rect(
         (0.20, 0.20), (0.80, 0.80)), QuadTree)
 
     #rect = Rect((0.15, 0.15), (0.8, 0.8))

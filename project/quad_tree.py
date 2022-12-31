@@ -19,7 +19,7 @@ class QuadTree():
         self.lower_right: QuadTree = None
         self.lower_left: QuadTree = None
 
-    def _visualise_tree(self, color: str) -> LinesCollection:
+    def _visualize_tree(self, color: str) -> LinesCollection:
         def get_bounds(tree: QuadTree) -> List[Rect]:
             if tree.upper_right == None:
                 return [tree.bounding_box.get_polyline()]
@@ -27,17 +27,17 @@ class QuadTree():
         return LinesCollection(lines=get_bounds(self), color=color)
 
     @staticmethod
-    def visualise_build(points: List[Point]) -> List[Scene]:
+    def visualize_build(points: List[Point]) -> List[Scene]:
         tree = QuadTree(Rect.find_bounding_box(points))
         scenes: List[Scene] = []
         for i, point in enumerate(points):
-            lines_visualisation: LinesCollection = tree._visualise_tree(
+            lines_visualization: LinesCollection = tree._visualize_tree(
                 "blue")
-            tree._visualise_insert(
-                points, i, scenes, lines_visualisation)
+            tree._visualize_insert(
+                points, i, scenes, lines_visualization)
         return scenes
 
-    def _visualise_insert(self, points: List[Point], i: int, scenes: List[Scene], lines_vis: LinesCollection):
+    def _visualize_insert(self, points: List[Point], i: int, scenes: List[Scene], lines_vis: LinesCollection):
         previous = points[:i]
         future = points[i+1:] if i < len(points) else []
         point = points[i]
@@ -68,13 +68,13 @@ class QuadTree():
         if self.upper_right == None:
             self._subdivide()
 
-        if self.upper_right._visualise_insert(points, i, scenes, lines_vis):
+        if self.upper_right._visualize_insert(points, i, scenes, lines_vis):
             return True
-        if self.upper_left._visualise_insert(points, i, scenes, lines_vis):
+        if self.upper_left._visualize_insert(points, i, scenes, lines_vis):
             return True
-        if self.lower_right._visualise_insert(points, i, scenes, lines_vis):
+        if self.lower_right._visualize_insert(points, i, scenes, lines_vis):
             return True
-        if self.lower_left._visualise_insert(points, i, scenes, lines_vis):
+        if self.lower_left._visualize_insert(points, i, scenes, lines_vis):
             return True
 
         raise RuntimeError("Failed when inserting {}".format(point))
@@ -100,17 +100,17 @@ class QuadTree():
         raise RuntimeError("Failed when inserting {}".format(point))
 
     @staticmethod
-    def visualise_querry(points: List[Point], rect: Rect) -> List[Scene]:
+    def visualize_querry(points: List[Point], rect: Rect) -> List[Scene]:
         tree = QuadTree(Rect.find_bounding_box(points))
         for p in points:
             tree.insert(p)
         scenes: List[Scene] = []
         solution: List[Point] = []
-        tree._visualise_querry(rect, scenes, solution, points,
-                               tree._visualise_tree("blue"))
+        tree._visualize_querry(rect, scenes, solution, points,
+                               tree._visualize_tree("blue"))
         return scenes
 
-    def _visualise_querry(self, rect: Rect, scenes: List[Scene], solution: List[Point], all_points: List[Point], line_vis: LinesCollection) -> List[Point]:
+    def _visualize_querry(self, rect: Rect, scenes: List[Scene], solution: List[Point], all_points: List[Point], line_vis: LinesCollection) -> List[Point]:
 
         if not rect.intersects(self.bounding_box):
             scenes.append(Scene(
@@ -167,13 +167,13 @@ class QuadTree():
             rects=[rect]
         ))
 
-        result.extend(self.upper_right._visualise_querry(
+        result.extend(self.upper_right._visualize_querry(
             rect, scenes, solution, all_points, line_vis))
-        result.extend(self.upper_left._visualise_querry(
+        result.extend(self.upper_left._visualize_querry(
             rect, scenes, solution, all_points, line_vis))
-        result.extend(self.lower_right._visualise_querry(
+        result.extend(self.lower_right._visualize_querry(
             rect, scenes, solution, all_points, line_vis))
-        result.extend(self.lower_left._visualise_querry(
+        result.extend(self.lower_left._visualize_querry(
             rect, scenes, solution, all_points, line_vis))
         return result
 
