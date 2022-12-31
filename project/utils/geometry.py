@@ -3,6 +3,7 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
+EPS = 10 ** -12
 
 class Point():
     def __init__(self, x: float, y: float) -> 'Point':

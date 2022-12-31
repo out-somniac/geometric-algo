@@ -1,8 +1,8 @@
 import math
 from typing import List, Tuple
-
 from numpy import random as rand
-
+import numpy as np
+from random import uniform
 from utils.geometry import Point, Rect
 
 
@@ -62,3 +62,28 @@ def on_polyline(polyline: List[Tuple[float, float]], total):
         final_y = points_y[i] + (points_y[i+1] - points_y[i]) * theta
         return (final_x, final_y)
     return [one_rand(vectors, partial_sum, total_sum) for _ in range(total)]
+
+def generate_grid(bounds: Rect, total: int):
+    t = math.sqrt(total)
+    x = np.linspace(bounds.lower_left.x, bounds.upper_right.x, int(t))
+    y = np.linspace(bounds.lower_left.y, bounds.upper_right.y, int(t))
+
+    X,Y = np.meshgrid(x,y)
+
+    positions = np.vstack([Y.ravel(), X.ravel()])
+    points = [(positions[0][i],positions[1][i]) for i in range(len(positions[0]))]
+    return points
+
+def generate_cross(bounds: Rect, total: int):
+    points = [(uniform(bounds.lower_left.x, bounds.upper_right.x), bounds.upper_right.y / 2) for _ in range(total // 2)]
+    points += [(bounds.upper_right.x / 2, (uniform(bounds.lower_left.y, bounds.upper_right.y))) for _ in range(total // 2)]
+    return points
+
+def generate_circle(center: Point, rad: int, total: int):
+    points = [None for _ in range(total)]
+    for i in range(total):
+        t = uniform(0, 4)
+        x = rad * math.cos(0.5 * math.pi * t)
+        y = rad * math.sin(0.5 * math.pi * t)
+        points[i] = (x, y)
+    return points

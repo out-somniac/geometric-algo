@@ -1,3 +1,8 @@
+from utils.geometry import EPS as eps
+from utils.drawing import PointsCollection
+from utils.drawing import LinesCollection
+from utils.drawing import Scene
+
 class KDtree:
     class Region:
         def __init__(self, lower_left, upper_right):
@@ -13,6 +18,7 @@ class KDtree:
             self.subtree_nodes = []
 
     def __init__(self, P):
+        P=[tuple(p) for p in P]
         self.P = P
         self.points_indices = [i for i in range(len(P))]
         x_sorted = sorted(self.points_indices, key = lambda x : P[x][0])
@@ -34,6 +40,8 @@ class KDtree:
         return(x, y)
 
     def _build_tree(self, x_sorted, y_sorted, depth):
+        if len(x_sorted) == 0:
+            return None
         if len(x_sorted) == 1:
             new_node =  self.Node(x_sorted[0])
             new_node.subtree_nodes = [x for x in x_sorted]
@@ -60,15 +68,21 @@ class KDtree:
         new_node.right = self._build_tree(x2_sorted, y2_sorted, depth + 1)
         return new_node
 
-    def visualize_build_tree(self):
-        min_x = min([self.P[i][0] for i in range(len(self.P))])
-        min_y = min([self.P[i][1] for i in range(len(self.P))])
-        max_x = max([self.P[i][0] for i in range(len(self.P))])
-        max_y = max([self.P[i][1] for i in range(len(self.P))])
+    def visualize_build(self, points):
+        P=[tuple(p) for p in points]
+        points_indices = [i for i in range(len(P))]
+        x_sorted = sorted(points_indices, key = lambda x : P[x][0])
+        y_sorted = sorted(points_indices, key = lambda x : P[x][1])
+
+        min_x = min([P[i][0] for i in range(len(P))])
+        min_y = min([P[i][1] for i in range(len(P))])
+        max_x = max([P[i][0] for i in range(len(P))])
+        max_y = max([P[i][1] for i in range(len(P))])
         bounds_lines = []
-        bound_points = PointsCollection([(0, 0), (100, 0), (100, 100), (0, 100)], alpha = 0.0)
         scenes = []
         def _build_tree_vis(x_sorted, y_sorted, depth, bounds):
+            if len(x_sorted) == 0:
+                return None
             if len(x_sorted) == 1:
                 return self.Node(x_sorted[0])
             
@@ -80,37 +94,34 @@ class KDtree:
             
             if dim == 0:
                 mid_idx = self._median(x_sorted)
-                bounds_a[1] = (self.P[mid_idx][0], bounds[1][1])
-                bounds_a[2] = (self.P[mid_idx][0], bounds[2][1])
-                bounds_b[0] = (self.P[mid_idx][0], bounds[1][1])
-                bounds_b[3] = (self.P[mid_idx][0], bounds[2][1])
+                bounds_a[1] = (P[mid_idx][0], bounds[1][1])
+                bounds_a[2] = (P[mid_idx][0], bounds[2][1])
+                bounds_b[0] = (P[mid_idx][0], bounds[1][1])
+                bounds_b[3] = (P[mid_idx][0], bounds[2][1])
                 new_line = [bounds_a[1], bounds_a[2]]
             else:
                 mid_idx = self._median(y_sorted)
-                bounds_b[0] = (bounds[0][0], self.P[mid_idx][1])
-                bounds_b[1] = (bounds[1][0], self.P[mid_idx][1])
-                bounds_a[2] = (bounds[2][0], self.P[mid_idx][1])
-                bounds_b[3] = (bounds[3][0], self.P[mid_idx][1])
+                bounds_b[0] = (bounds[0][0], P[mid_idx][1])
+                bounds_b[1] = (bounds[1][0], P[mid_idx][1])
+                bounds_a[2] = (bounds[2][0], P[mid_idx][1])
+                bounds_b[3] = (bounds[3][0], P[mid_idx][1])
                 new_line = [bounds_b[0], bounds_b[1]]
 
             bounds_lines.append(new_line)
             
-            x1_sorted = [p for p in x_sorted if self.P[p][dim] < self.P[mid_idx][dim] + eps]
-            x2_sorted = [p for p in x_sorted if self.P[p][dim] > self.P[mid_idx][dim]]
-            y1_sorted = [p for p in y_sorted if self.P[p][dim] < self.P[mid_idx][dim] + eps]
-            y2_sorted = [p for p in y_sorted if self.P[p][dim] > self.P[mid_idx][dim]]
+            x1_sorted = [p for p in x_sorted if P[p][dim] < P[mid_idx][dim] + eps]
+            x2_sorted = [p for p in x_sorted if P[p][dim] > P[mid_idx][dim]]
+            y1_sorted = [p for p in y_sorted if P[p][dim] < P[mid_idx][dim] + eps]
+            y2_sorted = [p for p in y_sorted if P[p][dim] > P[mid_idx][dim]]
             
             new_node = self.Node(mid_idx)
-            new_node.lower_left = self._find_region_lower_left(self.P, x_sorted)
-            new_node.upper_right = self._find_region_upper_right(self.P, x_sorted)
+            new_node.lower_left = self._find_region_lower_left(P, x_sorted)
+            new_node.upper_right = self._find_region_upper_right(P, x_sorted)
 
             scenes.append(
                 Scene(points = \
-                                [PointsCollection(self.P)] + \
-                                [PointsCollection([self.P[p]for p in x_sorted], color = 'orange')] + \
-                                [PointsCollection([self.P[mid_idx]], color = 'red')] + \
-                                [PointsCollection([new_node.lower_left, new_node.upper_right], color = 'green')] + \
-                                [bound_points],
+                                [PointsCollection(P)] + \
+                                [PointsCollection([P[mid_idx]], color = 'red')],
                         lines = \
                             [LinesCollection([l for l in bounds_lines])])
             )
@@ -119,11 +130,8 @@ class KDtree:
             new_node.right = _build_tree_vis(x2_sorted, y2_sorted, depth + 1, bounds_b)
             return new_node
 
-        x_sorted = sorted(self.points_indices, key = lambda x : self.P[x][0])
-        y_sorted = sorted(self.points_indices, key = lambda x : self.P[x][1])
         bounds = [(min_x, min_y), (max_x, min_y), (max_x, max_y), (min_x, max_y)]
         bounds_lines = [[bounds[0], bounds[1]], [bounds[1], bounds[2]], [bounds[2], bounds[3]], [bounds[3], bounds[0]]]
-        #scenes.append(Scene(points = [PointsCollection(self.P)], lines = [LinesCollection(bounds_lines)]))
         head = _build_tree_vis(x_sorted, y_sorted, 0, bounds)
         return scenes
 
