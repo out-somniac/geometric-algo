@@ -7,6 +7,9 @@ from utils.geometry import Point, Rect
 from utils.visualizer import Visualizer
 from KDtree import KDtree
 
+from utils.files import save_points_to_file
+from utils.files import get_saved_points
+
 
 def main():
     #points = gen.normal_distribution(Rect((0.0, 0.0), (1.0, 1.0)), 1000)
@@ -14,10 +17,13 @@ def main():
     #points = gen.rectangle_outliers(Rect((-1.0, -1.0), (1.0, 1.0)), 100)
     #Visualizer.visualize_build(points, QuadTree)
 
-    points = gen.generate_grid(Rect((0.0, 0.0), (1.0, 1.0)), 100)
+    #save_points_to_file(points, "test.json")
+    #p = get_saved_points("test.json")
+
+    #points = gen.generate_grid(Rect((0.0, 0.0), (1.0, 1.0)), 100)
     #points = gen.generate_cross(Rect((0.0, 0.0), (1.0, 1.0)), 100)
     #points = gen.generate_circle(Point(0.0, 0.0), 100, 100)
-    Visualizer.visualize_points(points)
+    #Visualizer.visualize_points(points)
 
 if __name__ == "__main__":
     main()
