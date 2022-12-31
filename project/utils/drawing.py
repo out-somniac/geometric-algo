@@ -4,6 +4,7 @@ import matplotlib.collections as mcoll
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.patches import Rectangle
 from matplotlib.widgets import Button
 
 TOLERANCE = 0.15
@@ -106,6 +107,11 @@ class _Button_callback(object):
         for collection in (self.scenes[self.i].lines + self.added_lines + self.added_rects):
             self.ax.add_collection(collection.get_collection())
         self.ax.autoscale(autoscaling)
+        for rect in self.scenes[self.i].rects:
+            width = rect.upper_right.x - rect.lower_left.x
+            height = rect.upper_right.y - rect.lower_left.y
+            self.ax.add_patch(Rectangle(tuple(rect.lower_left),
+                              width, height, facecolor='red', alpha=0.30))
         if not autoscaling:
             self.ax.set_xlim(xlim)
             self.ax.set_ylim(ylim)
@@ -113,9 +119,10 @@ class _Button_callback(object):
 
 
 class Scene:
-    def __init__(self, points=[], lines=[]):
+    def __init__(self, points=[], lines=[], rects=[]):
         self.points = points
         self.lines = lines
+        self.rects = rects
 
 
 class PointsCollection:

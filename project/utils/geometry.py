@@ -24,6 +24,10 @@ class Point():
     def precedes(self, other: 'Point') -> bool:
         return self.x < other.x and self.y < other.y
 
+    def __iter__(self):
+        yield self.x
+        yield self.y
+
     def __getitem__(self, key):
         if key == 0:
             return self.x
@@ -73,3 +77,28 @@ class Rect():
         down = Rect((self.lower_left.x, self.lower_left.y),
                     (self.upper_right.x, midpoint))
         return up, down
+
+    @staticmethod
+    def find_bounding_box(points: List['Point']) -> 'Rect':
+        low_x = points[0].x
+        low_y = points[0].y
+        high_x = points[0].x
+        high_y = points[0].y
+
+        for point in points:
+            if point.x < low_x:
+                low_x = point.x
+            if point.y < low_y:
+                low_y = point.y
+            if point.x > high_x:
+                high_x = point.x
+            if point.y > high_y:
+                high_y = point.y
+        return Rect((low_x, low_y), (high_x, high_y))
+
+    def get_polyline(self: 'Rect') -> List[Tuple[float, float]]:
+        return [tuple(self.lower_left),
+                (self.upper_right.x, self.lower_left.y),
+                tuple(self.upper_right),
+                (self.lower_left.x, self.upper_right.y),
+                tuple(self.lower_left)]
