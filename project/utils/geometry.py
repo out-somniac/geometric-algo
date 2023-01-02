@@ -41,8 +41,8 @@ class Rect():
         self.lower_left = Point(*lower_left)
         self.upper_right = Point(*upper_right)
 
-        if not self.lower_left.precedes(self.upper_right):
-           raise ValueError('Lower-left point must precede the upper-right')
+        #if not self.lower_left.precedes(self.upper_right):
+         #  raise ValueError('Lower-left point must precede the upper-right')
 
     def __eq__(self, other: 'Rect') -> bool:
         return self.lower_left == other.lower_left and self.upper_right == other.upper_right

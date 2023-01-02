@@ -1,12 +1,18 @@
 import json
+from utils.generator import Point
 
-def save_points_to_file(points, name):
-    jsonString = json.dumps(points)
-    with open(name, 'w') as f:
-        f.write(jsonString)
+class FileHandler():
 
-def get_saved_points(name):
-    with open(name, 'r') as f:
-        jsonContent = f.read()
-    points = json.loads(jsonContent)
-    return points
+    @staticmethod
+    def save_points_to_file(points, name):
+        jsonString = json.dumps([(p.x, p.y) for p in points])
+        with open(name, 'w') as f:
+            f.write(jsonString)
+
+    @staticmethod
+    def get_saved_points(name):
+        with open(name, 'r') as f:
+            jsonContent = f.read()
+        points = json.loads(jsonContent)
+        points = [Point(p[0], p[1]) for p in points]
+        return points

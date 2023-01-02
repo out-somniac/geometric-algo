@@ -71,12 +71,12 @@ def generate_grid(bounds: Rect, total: int):
     X,Y = np.meshgrid(x,y)
 
     positions = np.vstack([Y.ravel(), X.ravel()])
-    points = [(positions[0][i],positions[1][i]) for i in range(len(positions[0]))]
+    points = [Point(positions[0][i],positions[1][i]) for i in range(len(positions[0]))]
     return points
 
 def generate_cross(bounds: Rect, total: int):
-    points = [(uniform(bounds.lower_left.x, bounds.upper_right.x), bounds.upper_right.y / 2) for _ in range(total // 2)]
-    points += [(bounds.upper_right.x / 2, (uniform(bounds.lower_left.y, bounds.upper_right.y))) for _ in range(total // 2)]
+    points = [Point(uniform(bounds.lower_left.x, bounds.upper_right.x), bounds.upper_right.y / 2) for _ in range(total // 2)]
+    points += [Point(bounds.upper_right.x / 2, (uniform(bounds.lower_left.y, bounds.upper_right.y))) for _ in range(total // 2)]
     return points
 
 def generate_circle(center: Point, rad: int, total: int):
@@ -85,5 +85,5 @@ def generate_circle(center: Point, rad: int, total: int):
         t = uniform(0, 4)
         x = rad * math.cos(0.5 * math.pi * t)
         y = rad * math.sin(0.5 * math.pi * t)
-        points[i] = (x, y)
+        points[i] = Point(x, y)
     return points
