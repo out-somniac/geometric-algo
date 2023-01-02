@@ -5,6 +5,7 @@ from matplotlib.patches import Rectangle
 
 EPS = 10 ** -12
 
+
 class Point():
     def __init__(self, x: float, y: float) -> 'Point':
         self.x = x
@@ -29,11 +30,13 @@ class Point():
         yield self.x
         yield self.y
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int):
         if key == 0:
             return self.x
         elif key == 1:
             return self.y
+        else:
+            raise IndexError("No coordinate at index {}".format(key))
 
 
 class Rect():
@@ -41,8 +44,8 @@ class Rect():
         self.lower_left = Point(*lower_left)
         self.upper_right = Point(*upper_right)
 
-        #if not self.lower_left.precedes(self.upper_right):
-         #  raise ValueError('Lower-left point must precede the upper-right')
+        # if not self.lower_left.precedes(self.upper_right):
+        #  raise ValueError('Lower-left point must precede the upper-right')
 
     def __eq__(self, other: 'Rect') -> bool:
         return self.lower_left == other.lower_left and self.upper_right == other.upper_right
