@@ -19,7 +19,7 @@ class KDtree:
             self.region = None
             self.subtree_nodes = []
 
-    def __init__(self, P):
+    def __init__(self, P:List[Point]):
         P=[tuple(p) for p in P]
         self.P = P
         self.points_indices = [i for i in range(len(P))]
@@ -74,7 +74,7 @@ class KDtree:
         return new_node
 
     @staticmethod
-    def visualize_build(points):
+    def visualize_build(points : List[Point]) -> List[Scene]:
         P=[tuple(p) for p in points]
         points_indices = [i for i in range(len(P))]
         x_sorted = sorted(points_indices, key = lambda x : P[x][0])
@@ -159,7 +159,7 @@ class KDtree:
         r2 = Rect(p2.lower_left, p2.upper_right)
         return r1.contains_rectangle(r2)
 
-    def get_points_inside(self, rect: Rect):
+    def querry_range(self, rect: Rect) -> List[Point]:
         x1 = rect.lower_left.x
         x2 = rect.upper_right.x
         y1 = rect.lower_left.y
@@ -187,7 +187,7 @@ class KDtree:
         r = self.Region(r_lower_left, r_upper_right)
         res = _query(r, self.head)
 
-        return [self.P[idx] for idx in res]
+        return [Point(self.P[idx][0], Point(self.P[idx][1])) for idx in res]
 
     def _get_bound_lines(self, head):
         p1 = head.region.lower_left
