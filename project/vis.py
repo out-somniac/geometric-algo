@@ -81,25 +81,16 @@ def get_data_set_querry_range(name):
 
 
 def test_trees():
-    points_num = [1000, 5000, 10000, 15000, 20000, 25000]
+    points_num = [1000]
     data_set_names = ["normal_dist", "on_rectangle", "outliers", "grid", "cross", "circle"]
 
     for name in data_set_names:
         data_rows = [["points", "kd_build", "quad_build", "kd_querry", "quad_querry"]]
         points = get_data_set(name, 1000)
-        Visualizer.visualize_points(points)
-        for p_num in points_num:
-            points = get_data_set(name, p_num)
-            kd_build_time = measure_kd_build_time(points)
-            quad_build_time = measure_quad_build_time(points)
-            kd_querry_time = measure_kd_querry_time(points, get_data_set_querry_range(name))
-            quad_querry_time = measure_quad_querry_time(points, Rect((0.25, 0.25), (1.0, 1.0)))
-            data_rows.append([p_num, kd_build_time, quad_build_time, kd_querry_time, quad_querry_time])
-
-        #with open("time/" + name + '.csv', 'w', encoding='UTF8', newline='') as f:
-        #    writer = csv.writer(f)
-        #    for row in data_rows:
-        #        writer.writerow(row)
+        Visualizer.visualize_build(points, KDtree)
+        Visualizer.visualize_build(points, QuadTree)
+        Visualizer.visualize_result(points, get_data_set_querry_range(name), KDtree)
+        Visualizer.visualize_result(points, get_data_set_querry_range(name), QuadTree)
 
 def main():
     test_trees()
