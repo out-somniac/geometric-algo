@@ -187,7 +187,7 @@ class KDtree:
         r = self.Region(r_lower_left, r_upper_right)
         res = _query(r, self.head)
 
-        return [Point(self.P[idx][0], Point(self.P[idx][1])) for idx in res]
+        return [Point(self.P[idx][0], self.P[idx][1]) for idx in res]
 
     def _get_bound_lines(self, head):
         p1 = head.region.lower_left
@@ -243,6 +243,9 @@ class KDtree:
         r_upper_right = (max(x1, x2), max(y1, y2))
         r = self.Region(r_lower_left, r_upper_right)
         res = _query(r, self.head)
+        scenes.append(Scene(
+                        points = [PointsCollection(self.P), PointsCollection([p for p in self.inside], color = 'red')], 
+                        rects=[rect]))
         return scenes
 
     

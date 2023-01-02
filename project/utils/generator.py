@@ -61,7 +61,7 @@ class Generator():
             theta = ((t-partial_sum[i])/norm(vectors[i]))
             final_x = points_x[i] + (points_x[i+1] - points_x[i]) * theta
             final_y = points_y[i] + (points_y[i+1] - points_y[i]) * theta
-            return (final_x, final_y)
+            return Point(final_x, final_y)
         return [one_rand(vectors, partial_sum, total_sum) for _ in range(total)]
 
     @staticmethod
@@ -87,7 +87,7 @@ class Generator():
         points = [None for _ in range(total)]
         for i in range(total):
             t = uniform(0, 4)
-            x = rad * math.cos(0.5 * math.pi * t)
-            y = rad * math.sin(0.5 * math.pi * t)
+            x = center.x + rad * math.cos(0.5 * math.pi * t)
+            y = center.y + rad * math.sin(0.5 * math.pi * t)
             points[i] = Point(x, y)
         return points
