@@ -8,7 +8,7 @@ from utils.geometry import Point, Rect
 
 
 class QuadTree():
-    CAPACITY = 5  # Arbitrary constant to indicate how many elements can be stored in this quad tree node
+    CAPACITY = 1  # Arbitrary constant to indicate how many elements can be stored in this quad tree node
 
     def __init__(self, bounding_box: Rect) -> 'QuadTree':
         self.bounding_box = bounding_box
