@@ -1,7 +1,6 @@
 import json as js
 
 import matplotlib.collections as mcoll
-import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Rectangle
